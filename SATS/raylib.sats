@@ -20,10 +20,12 @@ macdef PI = $extval(float, "PI")
 macdef RAD2DEG = $extval(float, "RAD2DEG")
 macdef DEG2RAD = $extval(float, "DEG2RAD")
 
-macdef SubText = $extval(int, "SubText")
-macdef ShowWindow = $extval(int, "ShowWindow")
-macdef FormatText = $extval(int, "FormatText")
-macdef SpriteFont = $extval(int, "SpriteFont")
+//macdef SubText = $extval(int, "SubText")
+//macdef ShowWindow = $extval(int, "ShowWindow")
+//macdef FormatText = $extval(int, "FormatText")
+
+
+typedef SpriteFont = $extype"SpriteFont"
 
 //macdef RL_MALLOC(sz) = $extval(int, "RL_MALLOC(sz)")
 //macdef RL_CALLOC(n,sz) = $extval(int, "RL_CALLOC(n,sz)")
@@ -140,13 +142,19 @@ typedef RenderTexture2D = $extype_struct"RenderTexture2D" of {
 
 typedef RenderTexture = $extype"RenderTexture"
 
+abst@ype NPatchType = $extype"NPatchType"
+
+macdef NPT_9PATCH = $extval(NPatchType,"NPT_9PATCH")
+macdef NPT_3PATCH_VERTICAL = $extval(NPatchType,"NPT_3PATCH_VERTICAL")
+macdef NPT_3PATCH_HORIZONTAL = $extval(NPatchType,"NPT_3PATCH_HORIZONTAL")
+
 typedef NPatchInfo = $extype_struct"NPatchInfo" of {
    sourceRec = Rectangle
  , left = int
  , top = int
  , right = int
  , bottom = int
- , type = int
+ , type = NPatchType
 }
 
 typedef CharInfo = $extype_struct"CharInfo" of {
@@ -165,12 +173,17 @@ typedef Font = $extype_struct"Font" of {
  , chars = cPtr0(CharInfo)
 }
 
+abst@ype CameraType = $extype"CameraType"
+
+macdef CAMERA_PERSPECTIVE = $extval(CameraType,"CAMERA_PERSPECTIVE")
+macdef CAMERA_ORTHOGRAPHIC = $extval(CameraType,"CAMERA_ORTHOGRAPHIC")
+
 typedef Camera3D = $extype_struct"Camera3D" of {
    position = Vector3
  , target = Vector3
  , up = Vector3
  , fovy = float
- , type = int
+ , type = CameraType
 }
 
 typedef Camera = $extype"Camera"
@@ -272,21 +285,21 @@ typedef Wave = $extype_struct"Wave" of {
  , data = ptr
 }
 
-typedef rAudioBuffer = $extype"rAudioBuffer"
+absvtype rAudioBuffer = $extype"rAudioBuffer *"
 
-typedef AudioStream = $extype_struct"AudioStream" of {
+vtypedef AudioStream = $extype_struct"AudioStream" of {
    sampleRate = uint
  , sampleSize = uint
  , channels = uint
- , buffer = cPtr0(rAudioBuffer)
+ , buffer = rAudioBuffer
 }
 
-typedef Sound = $extype_struct"Sound" of {
+vtypedef Sound = $extype_struct"Sound" of {
    sampleCount = uint
  , stream = AudioStream
 }
 
-typedef Music = $extype_struct"Music" of {
+vtypedef Music = $extype_struct"Music" of {
    ctxType = int
  , ctxData = ptr
  , sampleCount = uint
@@ -632,16 +645,7 @@ macdef CAMERA_ORBITAL = $extval(CameraMode,"CAMERA_ORBITAL")
 macdef CAMERA_FIRST_PERSON = $extval(CameraMode,"CAMERA_FIRST_PERSON")
 macdef CAMERA_THIRD_PERSON = $extval(CameraMode,"CAMERA_THIRD_PERSON")
 
-abst@ype CameraType = $extype"CameraType"
 
-macdef CAMERA_PERSPECTIVE = $extval(CameraType,"CAMERA_PERSPECTIVE")
-macdef CAMERA_ORTHOGRAPHIC = $extval(CameraType,"CAMERA_ORTHOGRAPHIC")
-
-abst@ype NPatchType = $extype"NPatchType"
-
-macdef NPT_9PATCH = $extval(NPatchType,"NPT_9PATCH")
-macdef NPT_3PATCH_VERTICAL = $extval(NPatchType,"NPT_3PATCH_VERTICAL")
-macdef NPT_3PATCH_HORIZONTAL = $extval(NPatchType,"NPT_3PATCH_HORIZONTAL")
 
 //typedef TraceLogCallback = (int, cPtr0(char), va_list) -> void
 
@@ -769,7 +773,7 @@ fun GetColor(int) : Color = "mac#"
 
 fun Fade(Color, float) : Color = "mac#"
 
-fun SetConfigFlags(uint) : void = "mac#"
+fun SetConfigFlags(ConfigFlag) : void = "mac#"
 
 fun SetTraceLogLevel(int) : void = "mac#"
 
@@ -783,33 +787,33 @@ fun TakeScreenshot(filename: string) : void = "mac#"
 
 fun GetRandomValue(int, int) : int = "mac#"
 
-fun LoadFileData(cPtr0(char), cPtr0(int)) : cPtr0(uchar) = "mac#"
+fun LoadFileData(fileName: string, bytesRead : &int? >> int ) : cPtr0(uchar) = "mac#"
 
-fun SaveFileData(cPtr0(char), ptr, int) : void = "mac#"
+fun SaveFileData(fileName:string, data:ptr, bytesRead: int) : void = "mac#"
 
-fun FileExists(cPtr0(char)) : bool = "mac#"
+fun FileExists(string) : bool = "mac#"
 
-fun IsFileExtension(cPtr0(char), cPtr0(char)) : bool = "mac#"
+fun IsFileExtension(fileName: string, ext: string) : bool = "mac#"
 
-fun DirectoryExists(cPtr0(char)) : bool = "mac#"
+fun DirectoryExists(directory: string) : bool = "mac#"
 
-fun GetExtension(cPtr0(char)) : cPtr0(char) = "mac#"
+fun GetExtension(string) : string = "mac#"
 
-fun GetFileName(cPtr0(char)) : cPtr0(char) = "mac#"
+fun GetFileName(string) : string = "mac#"
 
-fun GetFileNameWithoutExt(cPtr0(char)) : cPtr0(char) = "mac#"
+fun GetFileNameWithoutExt(string) : string = "mac#"
 
-fun GetDirectoryPath(cPtr0(char)) : cPtr0(char) = "mac#"
+fun GetDirectoryPath(string) : string = "mac#"
 
-fun GetPrevDirectoryPath(cPtr0(char)) : cPtr0(char) = "mac#"
+fun GetPrevDirectoryPath(string) : string = "mac#"
 
-fun GetWorkingDirectory() : cPtr0(char) = "mac#"
+fun GetWorkingDirectory() : string = "mac#"
 
-fun GetDirectoryFiles(cPtr0(char), cPtr0(int)) : cPtr0(cPtr0(char)) = "mac#"
+fun GetDirectoryFiles(string, &int? >> int) : cPtr0(cPtr0(char)) = "mac#"
 
 fun ClearDirectoryFiles() : void = "mac#"
 
-fun ChangeDirectory(cPtr0(char)) : bool = "mac#"
+fun ChangeDirectory(string) : bool = "mac#"
 
 fun IsFileDropped() : bool = "mac#"
 
@@ -817,7 +821,7 @@ fun GetDroppedFiles(cPtr0(int)) : cPtr0(cPtr0(char)) = "mac#"
 
 fun ClearDroppedFiles() : void = "mac#"
 
-fun GetFileModTime(cPtr0(char)) : lint = "mac#"
+fun GetFileModTime(fileName: string) : lint = "mac#"
 
 fun CompressData(cPtr0(uchar), int, cPtr0(int)) : cPtr0(uchar) = "mac#"
 
@@ -827,7 +831,7 @@ fun SaveStorageValue(int, int) : void = "mac#"
 
 fun LoadStorageValue(int) : int = "mac#"
 
-fun OpenURL(cPtr0(char)) : void = "mac#"
+fun OpenURL(string) : void = "mac#"
 
 fun IsKeyPressed(KeyboardKey) : bool = "mac#"
 
@@ -841,33 +845,33 @@ fun SetExitKey(KeyboardKey) : void = "mac#"
 
 fun GetKeyPressed() : KeyboardKey = "mac#"
 
-fun IsGamepadAvailable(int) : bool = "mac#"
+fun IsGamepadAvailable(GamepadNumber) : bool = "mac#"
 
-fun IsGamepadName(int, cPtr0(char)) : bool = "mac#"
+fun IsGamepadName(GamepadNumber, string) : bool = "mac#"
 
-fun GetGamepadName(int) : cPtr0(char) = "mac#"
+fun GetGamepadName(GamepadNumber) : string = "mac#"
 
-fun IsGamepadButtonPressed(int, int) : bool = "mac#"
+fun IsGamepadButtonPressed(GamepadNumber, GamepadButton) : bool = "mac#"
 
-fun IsGamepadButtonDown(int, int) : bool = "mac#"
+fun IsGamepadButtonDown(GamepadNumber, GamepadButton) : bool = "mac#"
 
-fun IsGamepadButtonReleased(int, int) : bool = "mac#"
+fun IsGamepadButtonReleased(GamepadNumber, GamepadButton) : bool = "mac#"
 
-fun IsGamepadButtonUp(int, int) : bool = "mac#"
+fun IsGamepadButtonUp(GamepadNumber, GamepadButton) : bool = "mac#"
 
 fun GetGamepadButtonPressed() : int = "mac#"
 
-fun GetGamepadAxisCount(int) : int = "mac#"
+fun GetGamepadAxisCount(GamepadNumber) : int = "mac#"
 
-fun GetGamepadAxisMovement(int, int) : float = "mac#"
+fun GetGamepadAxisMovement(GamepadNumber, GamepadAxis) : float = "mac#"
 
-fun IsMouseButtonPressed(int) : bool = "mac#"
+fun IsMouseButtonPressed(MouseButton) : bool = "mac#"
 
-fun IsMouseButtonDown(int) : bool = "mac#"
+fun IsMouseButtonDown(MouseButton) : bool = "mac#"
 
-fun IsMouseButtonReleased(int) : bool = "mac#"
+fun IsMouseButtonReleased(MouseButton) : bool = "mac#"
 
-fun IsMouseButtonUp(int) : bool = "mac#"
+fun IsMouseButtonUp(MouseButton) : bool = "mac#"
 
 fun GetMouseX() : int = "mac#"
 
@@ -907,7 +911,7 @@ fun GetGesturePinchVector() : Vector2 = "mac#"
 
 fun GetGesturePinchAngle() : float = "mac#"
 
-fun SetCameraMode(Camera, int) : void = "mac#"
+fun SetCameraMode(Camera, CameraMode) : void = "mac#"
 
 fun UpdateCamera(cPtr0(Camera)) : void = "mac#"
 
@@ -931,7 +935,7 @@ fun DrawLineEx(Vector2, Vector2, float, Color) : void = "mac#"
 
 fun DrawLineBezier(Vector2, Vector2, float, Color) : void = "mac#"
 
-fun DrawLineStrip(cPtr0(Vector2), int, Color) : void = "mac#"
+fun DrawLineStrip{n:nat}( &array(Vector2,n), int n, Color) : void = "mac#"
 
 fun DrawCircle(int, int, float, Color) : void = "mac#"
 
@@ -979,9 +983,9 @@ fun DrawTriangle(Vector2, Vector2, Vector2, Color) : void = "mac#"
 
 fun DrawTriangleLines(Vector2, Vector2, Vector2, Color) : void = "mac#"
 
-fun DrawTriangleFan(cPtr0(Vector2), int, Color) : void = "mac#"
+fun DrawTriangleFan{n:nat}(&array(Vector2,n), int n, Color) : void = "mac#"
 
-fun DrawTriangleStrip(cPtr0(Vector2), int, Color) : void = "mac#"
+fun DrawTriangleStrip{n:nat}(&array(Vector2,n), int n, Color) : void = "mac#"
 
 fun DrawPoly(Vector2, int, float, float, Color) : void = "mac#"
 
@@ -1001,25 +1005,25 @@ fun CheckCollisionPointCircle(Vector2, Vector2, float) : bool = "mac#"
 
 fun CheckCollisionPointTriangle(Vector2, Vector2, Vector2, Vector2) : bool = "mac#"
 
-fun LoadImage(cPtr0(char)) : Image = "mac#"
+fun LoadImage(string) : Image = "mac#"
 
-fun LoadImageEx(cPtr0(Color), int, int) : Image = "mac#"
+fun LoadImageEx{w,h:nat}(pixels: &array(Color,w*h), width: int w, height: int h) : Image = "mac#"
 
-fun LoadImagePro(ptr, int, int, int) : Image = "mac#"
+fun LoadImagePro(data: ptr, width: int, height: int, format: int) : Image = "mac#"
 
-fun LoadImageRaw(cPtr0(char), int, int, int, int) : Image = "mac#"
+fun LoadImageRaw(fileName: string, width: int, height: int, format: int, headerSize: int) : Image = "mac#"
 
-fun ExportImage(Image, cPtr0(char)) : void = "mac#"
+fun ExportImage(Image, fileName: string) : void = "mac#"
 
-fun ExportImageAsCode(Image, cPtr0(char)) : void = "mac#"
+fun ExportImageAsCode(Image, fileName: string) : void = "mac#"
 
-fun LoadTexture(cPtr0(char)) : Texture2D = "mac#"
+fun LoadTexture(fileName: string) : Texture2D = "mac#"
 
 fun LoadTextureFromImage(Image) : Texture2D = "mac#"
 
-fun LoadTextureCubemap(Image, int) : TextureCubemap = "mac#"
+fun LoadTextureCubemap(Image, layoutType: CubemapLayoutType) : TextureCubemap = "mac#"
 
-fun LoadRenderTexture(int, int) : RenderTexture2D = "mac#"
+fun LoadRenderTexture( width: int, height: int) : RenderTexture2D = "mac#"
 
 fun UnloadImage(Image) : void = "mac#"
 
@@ -1149,7 +1153,7 @@ fun LoadFontEx(cPtr0(char), int, cPtr0(int), int) : Font = "mac#"
 
 fun LoadFontFromImage(Image, Color, int) : Font = "mac#"
 
-fun LoadFontData(cPtr0(char), int, cPtr0(int), int, int) : cPtr0(CharInfo) = "mac#"
+fun LoadFontData(cPtr0(char), int, cPtr0(int), int, FontType) : cPtr0(CharInfo) = "mac#"
 
 fun GenImageFontAtlas(cPtr0(CharInfo), cPtr0(cPtr0(Rectangle)), int, int, int, int) : Image = "mac#"
 
@@ -1411,13 +1415,13 @@ fun IsAudioDeviceReady() : bool = "mac#"
 
 fun SetMasterVolume(float) : void = "mac#"
 
-fun LoadWave(cPtr0(char)) : Wave = "mac#"
+fun LoadWave(string) : Wave = "mac#"
 
-fun LoadSound(cPtr0(char)) : Sound = "mac#"
+fun LoadSound(string) : Sound = "mac#"
 
 fun LoadSoundFromWave(Wave) : Sound = "mac#"
 
-fun UpdateSound(Sound, cPtr0(void), int) : void = "mac#"
+fun UpdateSound(!Sound, cPtr0(void), int) : void = "mac#"
 
 fun UnloadWave(Wave) : void = "mac#"
 
@@ -1427,25 +1431,25 @@ fun ExportWave(Wave, cPtr0(char)) : void = "mac#"
 
 fun ExportWaveAsCode(Wave, cPtr0(char)) : void = "mac#"
 
-fun PlaySound(Sound) : void = "mac#"
+fun PlaySound(!Sound) : void = "mac#"
 
-fun StopSound(Sound) : void = "mac#"
+fun StopSound(!Sound) : void = "mac#"
 
-fun PauseSound(Sound) : void = "mac#"
+fun PauseSound(!Sound) : void = "mac#"
 
-fun ResumeSound(Sound) : void = "mac#"
+fun ResumeSound(!Sound) : void = "mac#"
 
-fun PlaySoundMulti(Sound) : void = "mac#"
+fun PlaySoundMulti(!Sound) : void = "mac#"
 
 fun StopSoundMulti() : void = "mac#"
 
 fun GetSoundsPlaying() : int = "mac#"
 
-fun IsSoundPlaying(Sound) : bool = "mac#"
+fun IsSoundPlaying(!Sound) : bool = "mac#"
 
-fun SetSoundVolume(Sound, float) : void = "mac#"
+fun SetSoundVolume(!Sound, float) : void = "mac#"
 
-fun SetSoundPitch(Sound, float) : void = "mac#"
+fun SetSoundPitch(!Sound, float) : void = "mac#"
 
 fun WaveFormat(cPtr0(Wave), int, int, int) : void = "mac#"
 
@@ -1459,49 +1463,49 @@ fun LoadMusicStream(cPtr0(char)) : Music = "mac#"
 
 fun UnloadMusicStream(Music) : void = "mac#"
 
-fun PlayMusicStream(Music) : void = "mac#"
+fun PlayMusicStream(!Music) : void = "mac#"
 
-fun UpdateMusicStream(Music) : void = "mac#"
+fun UpdateMusicStream(!Music) : void = "mac#"
 
-fun StopMusicStream(Music) : void = "mac#"
+fun StopMusicStream(!Music) : void = "mac#"
 
-fun PauseMusicStream(Music) : void = "mac#"
+fun PauseMusicStream(!Music) : void = "mac#"
 
-fun ResumeMusicStream(Music) : void = "mac#"
+fun ResumeMusicStream(!Music) : void = "mac#"
 
-fun IsMusicPlaying(Music) : bool = "mac#"
+fun IsMusicPlaying(!Music) : bool = "mac#"
 
-fun SetMusicVolume(Music, float) : void = "mac#"
+fun SetMusicVolume(!Music, float) : void = "mac#"
 
-fun SetMusicPitch(Music, float) : void = "mac#"
+fun SetMusicPitch(!Music, float) : void = "mac#"
 
-fun SetMusicLoopCount(Music, int) : void = "mac#"
+fun SetMusicLoopCount(!Music, int) : void = "mac#"
 
-fun GetMusicTimeLength(Music) : float = "mac#"
+fun GetMusicTimeLength(!Music) : float = "mac#"
 
-fun GetMusicTimePlayed(Music) : float = "mac#"
+fun GetMusicTimePlayed(!Music) : float = "mac#"
 
 fun InitAudioStream(uint, uint, uint) : AudioStream = "mac#"
 
-fun UpdateAudioStream(AudioStream, cPtr0(void), int) : void = "mac#"
+fun UpdateAudioStream(!AudioStream, cPtr0(void), int) : void = "mac#"
 
 fun CloseAudioStream(AudioStream) : void = "mac#"
 
-fun IsAudioStreamProcessed(AudioStream) : bool = "mac#"
+fun IsAudioStreamProcessed(!AudioStream) : bool = "mac#"
 
-fun PlayAudioStream(AudioStream) : void = "mac#"
+fun PlayAudioStream(!AudioStream) : void = "mac#"
 
-fun PauseAudioStream(AudioStream) : void = "mac#"
+fun PauseAudioStream(!AudioStream) : void = "mac#"
 
-fun ResumeAudioStream(AudioStream) : void = "mac#"
+fun ResumeAudioStream(!AudioStream) : void = "mac#"
 
-fun IsAudioStreamPlaying(AudioStream) : bool = "mac#"
+fun IsAudioStreamPlaying(!AudioStream) : bool = "mac#"
 
-fun StopAudioStream(AudioStream) : void = "mac#"
+fun StopAudioStream(!AudioStream) : void = "mac#"
 
-fun SetAudioStreamVolume(AudioStream, float) : void = "mac#"
+fun SetAudioStreamVolume(!AudioStream, float) : void = "mac#"
 
-fun SetAudioStreamPitch(AudioStream, float) : void = "mac#"
+fun SetAudioStreamPitch(!AudioStream, float) : void = "mac#"
 
 fun SetAudioStreamBufferSizeDefault(int) : void = "mac#"
 
