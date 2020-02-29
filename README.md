@@ -2,8 +2,11 @@
 
 Raw bindings to [raylib](https://www.raylib.com/) for ATS2.
 
-These bindings do not utilize any special features of ATS2.
-Resource leaks are still possible. 
+These bindings attempt to track resources ATS2.
+There may be some issues with resource / effect modelling
+
+There is some preliminary modelling of effects;
+I need to see how ergonomic this actually is.
 
 Still planned:
 - Function signatures need to reflect the constants they use.
