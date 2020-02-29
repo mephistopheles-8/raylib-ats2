@@ -2,15 +2,13 @@
 
 Raw bindings to [raylib](https://www.raylib.com/) for ATS2.
 
-These bindings attempt to track resources ATS2.
-There may be some issues with resource / effect modelling
+These bindings attempt to track resources and effects.
+Resource and effect modelling may not be perfect yet.
 
-There is some preliminary modelling of effects;
-I need to see how ergonomic this actually is.
+I need to verify that this approach is ergonomic and useful.
 
-Still planned:
-- Function signatures need to reflect the constants they use.
-- cPtr types should be updated to something more appropriate
-- Resource and context tracking with views and viewtypes
+Some parts of the library I haven't gotten to yet.  If you
+see `cptr` types, it's likely that I haven't gotten around
+to verifying the semantics of the given ptr.
 
 LICENSE: MIT

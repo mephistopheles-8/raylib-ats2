@@ -28,7 +28,7 @@ implement main0 ()
         SetTargetFPS( 60 );
         loop( WIN | ballPosition ) where {
           fun loop (WIN: Window_v | ballPosition : &Vector2  ) : void =
-            if ~WindowShouldClose() 
+            if ~WindowShouldClose( WIN | ) 
             then let
                 val () = 
                   ( ifcase
@@ -45,9 +45,9 @@ implement main0 ()
                 val (DRAW | ()) 
                   = BeginDrawing(WIN | );
                 val ( ) = (
-                  ClearBackground( RAYWHITE );
-                  DrawText("Move the ball with arrow keys", 10, 10, 20, DARKGRAY);
-                  DrawCircleV(ballPosition, 50.0f, MAROON );
+                  ClearBackground( DRAW | RAYWHITE );
+                  DrawText( DRAW | "Move the ball with arrow keys", 10, 10, 20, DARKGRAY);
+                  DrawCircleV( DRAW | ballPosition, 50.0f, MAROON );
                 )
                 val (WIN | ()) 
                   = EndDrawing(DRAW | );

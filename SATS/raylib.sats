@@ -74,8 +74,6 @@ typedef IVector4 = @{
  , w = int32
 }
 
-
-
 typedef Matrix = $extype_struct"Matrix" of {
    m0 = float
  , m4 = float
@@ -709,37 +707,39 @@ absview Window_v
 fun InitWindow(int, int, string) 
   : (Window_v | void) = "mac#"
 
-fun WindowShouldClose() : bool = "mac#"
+fun WindowShouldClose( !Window_v | ) : bool = "mac#"
 
-fun CloseWindow(Window_v |) : void = "mac#"
+fun CloseWindow( Window_v | ) : void = "mac#"
 
-fun IsWindowReady() : bool = "mac#"
+fun IsWindowReady( !Window_v | ) : bool = "mac#"
 
-fun IsWindowMinimized() : bool = "mac#"
+fun IsWindowMinimized( !Window_v | ) : bool = "mac#"
 
-fun IsWindowResized() : bool = "mac#"
+fun IsWindowResized( !Window_v | ) : bool = "mac#"
 
-fun IsWindowHidden() : bool = "mac#"
+fun IsWindowHidden( !Window_v | ) : bool = "mac#"
 
-fun ToggleFullscreen() : void = "mac#"
+fun ToggleFullscreen( !Window_v | ) : void = "mac#"
 
-fun UnhideWindow() : void = "mac#"
+fun UnhideWindow( !Window_v | ) : void = "mac#"
 
-fun HideWindow() : void = "mac#"
+fun HideWindow( !Window_v | ) : void = "mac#"
 
-fun SetWindowIcon(Image) : void = "mac#"
+fun SetWindowIcon( !Window_v | Image) : void = "mac#"
 
-fun SetWindowTitle(string) : void = "mac#"
+fun SetWindowTitle( !Window_v | string) : void = "mac#"
 
-fun SetWindowPosition(int, int) : void = "mac#"
+fun SetWindowPosition( !Window_v | int, int) : void = "mac#"
 
-fun SetWindowMonitor(int) : void = "mac#"
+fun SetWindowMonitor( !Window_v | int) : void = "mac#"
 
-fun SetWindowMinSize(int, int) : void = "mac#"
+fun SetWindowMinSize( !Window_v | int, int) : void = "mac#"
 
-fun SetWindowSize(int, int) : void = "mac#"
+fun SetWindowSize( !Window_v | int, int) : void = "mac#"
 
-fun GetWindowHandle() : ptr = "mac#"
+fun GetWindowHandle( !Window_v | ) : ptr = "mac#"
+
+(** Check to see if these are dependent on windowing **)
 
 fun GetScreenWidth() : int = "mac#"
 
@@ -773,7 +773,8 @@ fun EnableCursor() : void = "mac#"
 
 fun DisableCursor() : void = "mac#"
 
-fun ClearBackground(Color) : void = "mac#"
+absview Drawing_v
+fun ClearBackground( !Drawing_v | Color) : void = "mac#"
 
 (** The modes need to be vetted for usability
     concerns.  I find the views nice from a logical
@@ -781,7 +782,6 @@ fun ClearBackground(Color) : void = "mac#"
     and I'm not sure if anyone is likely to 
     mess this stuff up.
 **)
-absview Drawing_v
 fun BeginDrawing(Window_v |) 
   : (Drawing_v | void) = "mac#"
 
@@ -1012,73 +1012,73 @@ fun SetCameraSmoothZoomControl(int) : void = "mac#"
 
 fun SetCameraMoveControls(int, int, int, int, int, int) : void = "mac#"
 
-fun DrawPixel(int, int, Color) : void = "mac#"
+fun DrawPixel( !Drawing_v | int, int, Color) : void = "mac#"
 
-fun DrawPixelV(Vector2, Color) : void = "mac#"
+fun DrawPixelV( !Drawing_v | Vector2, Color) : void = "mac#"
 
-fun DrawLine(int, int, int, int, Color) : void = "mac#"
+fun DrawLine( !Drawing_v | int, int, int, int, Color) : void = "mac#"
 
-fun DrawLineV(Vector2, Vector2, Color) : void = "mac#"
+fun DrawLineV( !Drawing_v | Vector2, Vector2, Color) : void = "mac#"
 
-fun DrawLineEx(Vector2, Vector2, float, Color) : void = "mac#"
+fun DrawLineEx( !Drawing_v | Vector2, Vector2, float, Color) : void = "mac#"
 
-fun DrawLineBezier(Vector2, Vector2, float, Color) : void = "mac#"
+fun DrawLineBezier( !Drawing_v | Vector2, Vector2, float, Color) : void = "mac#"
 
-fun DrawLineStrip{n:nat}( &array(Vector2,n), int n, Color) : void = "mac#"
+fun DrawLineStrip{n:nat}( !Drawing_v |  &array(Vector2,n), int n, Color) : void = "mac#"
 
-fun DrawCircle(int, int, float, Color) : void = "mac#"
+fun DrawCircle( !Drawing_v | int, int, float, Color) : void = "mac#"
 
-fun DrawCircleSector(Vector2, float, int, int, int, Color) : void = "mac#"
+fun DrawCircleSector( !Drawing_v | Vector2, float, int, int, int, Color) : void = "mac#"
 
-fun DrawCircleSectorLines(Vector2, float, int, int, int, Color) : void = "mac#"
+fun DrawCircleSectorLines( !Drawing_v | Vector2, float, int, int, int, Color) : void = "mac#"
 
-fun DrawCircleGradient(int, int, float, Color, Color) : void = "mac#"
+fun DrawCircleGradient( !Drawing_v | int, int, float, Color, Color) : void = "mac#"
 
-fun DrawCircleV(Vector2, float, Color) : void = "mac#"
+fun DrawCircleV( !Drawing_v | Vector2, float, Color) : void = "mac#"
 
-fun DrawCircleLines(int, int, float, Color) : void = "mac#"
+fun DrawCircleLines( !Drawing_v | int, int, float, Color) : void = "mac#"
 
-fun DrawEllipse(int, int, float, float, Color) : void = "mac#"
+fun DrawEllipse( !Drawing_v | int, int, float, float, Color) : void = "mac#"
 
-fun DrawEllipseLines(int, int, float, float, Color) : void = "mac#"
+fun DrawEllipseLines( !Drawing_v | int, int, float, float, Color) : void = "mac#"
 
-fun DrawRing(Vector2, float, float, int, int, int, Color) : void = "mac#"
+fun DrawRing( !Drawing_v | Vector2, float, float, int, int, int, Color) : void = "mac#"
 
-fun DrawRingLines(Vector2, float, float, int, int, int, Color) : void = "mac#"
+fun DrawRingLines( !Drawing_v | Vector2, float, float, int, int, int, Color) : void = "mac#"
 
-fun DrawRectangle(int, int, int, int, Color) : void = "mac#"
+fun DrawRectangle( !Drawing_v | int, int, int, int, Color) : void = "mac#"
 
-fun DrawRectangleV(Vector2, Vector2, Color) : void = "mac#"
+fun DrawRectangleV( !Drawing_v | Vector2, Vector2, Color) : void = "mac#"
 
-fun DrawRectangleRec(Rectangle, Color) : void = "mac#"
+fun DrawRectangleRec( !Drawing_v | Rectangle, Color) : void = "mac#"
 
-fun DrawRectanglePro(Rectangle, Vector2, float, Color) : void = "mac#"
+fun DrawRectanglePro( !Drawing_v | Rectangle, Vector2, float, Color) : void = "mac#"
 
-fun DrawRectangleGradientV(int, int, int, int, Color, Color) : void = "mac#"
+fun DrawRectangleGradientV( !Drawing_v | int, int, int, int, Color, Color) : void = "mac#"
 
-fun DrawRectangleGradientH(int, int, int, int, Color, Color) : void = "mac#"
+fun DrawRectangleGradientH( !Drawing_v | int, int, int, int, Color, Color) : void = "mac#"
 
-fun DrawRectangleGradientEx(Rectangle, Color, Color, Color, Color) : void = "mac#"
+fun DrawRectangleGradientEx( !Drawing_v | Rectangle, Color, Color, Color, Color) : void = "mac#"
 
-fun DrawRectangleLines(int, int, int, int, Color) : void = "mac#"
+fun DrawRectangleLines( !Drawing_v | int, int, int, int, Color) : void = "mac#"
 
-fun DrawRectangleLinesEx(Rectangle, int, Color) : void = "mac#"
+fun DrawRectangleLinesEx( !Drawing_v | Rectangle, int, Color) : void = "mac#"
 
-fun DrawRectangleRounded(Rectangle, float, int, Color) : void = "mac#"
+fun DrawRectangleRounded( !Drawing_v | Rectangle, float, int, Color) : void = "mac#"
 
-fun DrawRectangleRoundedLines(Rectangle, float, int, int, Color) : void = "mac#"
+fun DrawRectangleRoundedLines( !Drawing_v | Rectangle, float, int, int, Color) : void = "mac#"
 
-fun DrawTriangle(Vector2, Vector2, Vector2, Color) : void = "mac#"
+fun DrawTriangle( !Drawing_v | Vector2, Vector2, Vector2, Color) : void = "mac#"
 
-fun DrawTriangleLines(Vector2, Vector2, Vector2, Color) : void = "mac#"
+fun DrawTriangleLines( !Drawing_v | Vector2, Vector2, Vector2, Color) : void = "mac#"
 
-fun DrawTriangleFan{n:nat}(&array(Vector2,n), int n, Color) : void = "mac#"
+fun DrawTriangleFan{n:nat}( !Drawing_v | &array(Vector2,n), int n, Color) : void = "mac#"
 
-fun DrawTriangleStrip{n:nat}(&array(Vector2,n), int n, Color) : void = "mac#"
+fun DrawTriangleStrip{n:nat}( !Drawing_v | &array(Vector2,n), int n, Color) : void = "mac#"
 
-fun DrawPoly(Vector2, int, float, float, Color) : void = "mac#"
+fun DrawPoly( !Drawing_v | Vector2, int, float, float, Color) : void = "mac#"
 
-fun DrawPolyLines(Vector2, int, float, float, Color) : void = "mac#"
+fun DrawPolyLines( !Drawing_v | Vector2, int, float, float, Color) : void = "mac#"
 
 fun CheckCollisionRecs(Rectangle, Rectangle) : bool = "mac#"
 
@@ -1168,15 +1168,15 @@ fun ImageText(string, int, Color) : Image = "mac#"
 
 fun ImageTextEx(!Font, string, float, float, Color) : Image = "mac#"
 
-fun ImageDraw(&Image, Image, Rectangle, Rectangle, Color) : void = "mac#"
+fun ImageDraw( !Drawing_v | &Image, Image, Rectangle, Rectangle, Color) : void = "mac#"
 
-fun ImageDrawRectangle(&Image, Rectangle, Color) : void = "mac#"
+fun ImageDrawRectangle( !Drawing_v | &Image, Rectangle, Color) : void = "mac#"
 
-fun ImageDrawRectangleLines(&Image, Rectangle, int, Color) : void = "mac#"
+fun ImageDrawRectangleLines( !Drawing_v | &Image, Rectangle, int, Color) : void = "mac#"
 
-fun ImageDrawText(&Image, Vector2, string, int, Color) : void = "mac#"
+fun ImageDrawText( !Drawing_v | &Image, Vector2, string, int, Color) : void = "mac#"
 
-fun ImageDrawTextEx(&Image, Vector2, !Font, string, float, float, Color) : void = "mac#"
+fun ImageDrawTextEx( !Drawing_v | &Image, Vector2, !Font, string, float, float, Color) : void = "mac#"
 
 fun ImageFlipVertical(&Image) : void = "mac#"
 
@@ -1220,19 +1220,19 @@ fun SetTextureFilter(!Texture2D, TextureFilterMode) : void = "mac#"
 
 fun SetTextureWrap(!Texture2D, TextureWrapMode) : void = "mac#"
 
-fun DrawTexture(!Texture2D, int, int, Color) : void = "mac#"
+fun DrawTexture( !Drawing_v | !Texture2D, int, int, Color) : void = "mac#"
 
-fun DrawTextureV(!Texture2D, Vector2, Color) : void = "mac#"
+fun DrawTextureV( !Drawing_v | !Texture2D, Vector2, Color) : void = "mac#"
 
-fun DrawTextureEx(!Texture2D, Vector2, float, float, Color) : void = "mac#"
+fun DrawTextureEx( !Drawing_v | !Texture2D, Vector2, float, float, Color) : void = "mac#"
 
-fun DrawTextureRec(!Texture2D, Rectangle, Vector2, Color) : void = "mac#"
+fun DrawTextureRec( !Drawing_v | !Texture2D, Rectangle, Vector2, Color) : void = "mac#"
 
-fun DrawTextureQuad(!Texture2D, Vector2, Vector2, Rectangle, Color) : void = "mac#"
+fun DrawTextureQuad( !Drawing_v | !Texture2D, Vector2, Vector2, Rectangle, Color) : void = "mac#"
 
-fun DrawTexturePro(!Texture2D, Rectangle, Rectangle, Vector2, float, Color) : void = "mac#"
+fun DrawTexturePro( !Drawing_v | !Texture2D, Rectangle, Rectangle, Vector2, float, Color) : void = "mac#"
 
-fun DrawTextureNPatch(!Texture2D, NPatchInfo, Rectangle, Vector2, float, Color) : void = "mac#"
+fun DrawTextureNPatch( !Drawing_v | !Texture2D, NPatchInfo, Rectangle, Vector2, float, Color) : void = "mac#"
 
 fun GetFontDefault() : Font = "mac#"
 
@@ -1248,17 +1248,17 @@ fun GenImageFontAtlas(cPtr0(CharInfo), cPtr0(cPtr0(Rectangle)), int, int, int, i
 
 fun UnloadFont(Font) : void = "mac#"
 
-fun DrawFPS(int, int) : void = "mac#"
+fun DrawFPS( !Drawing_v | int, int) : void = "mac#"
 
-fun DrawText(string, int, int, int, Color) : void = "mac#"
+fun DrawText( !Drawing_v | string, int, int, int, Color) : void = "mac#"
 
-fun DrawTextEx(!Font, string, Vector2, float, float, Color) : void = "mac#"
+fun DrawTextEx( !Drawing_v | !Font, string, Vector2, float, float, Color) : void = "mac#"
 
-fun DrawTextRec(!Font, string, Rectangle, float, float, bool, Color) : void = "mac#"
+fun DrawTextRec( !Drawing_v | !Font, string, Rectangle, float, float, bool, Color) : void = "mac#"
 
-fun DrawTextRecEx(!Font, string, Rectangle, float, float, bool, Color, int, int, Color, Color) : void = "mac#"
+fun DrawTextRecEx( !Drawing_v | !Font, string, Rectangle, float, float, bool, Color, int, int, Color, Color) : void = "mac#"
 
-fun DrawTextCodepoint(!Font, int, Vector2, float, Color) : void = "mac#"
+fun DrawTextCodepoint( !Drawing_v | !Font, int, Vector2, float, Color) : void = "mac#"
 
 fun MeasureText(string, int) : int = "mac#"
 
@@ -1307,39 +1307,39 @@ fun GetNextCodepoint(cPtr0(char), cPtr0(int)) : int = "mac#"
 
 fun CodepointToUtf8(int, &int? >> int n) : #[n:nat] arrayref(char,n) = "mac#"
 
-fun DrawLine3D(Vector3, Vector3, Color) : void = "mac#"
+fun DrawLine3D( !Mode3D_v | Vector3, Vector3, Color) : void = "mac#"
 
-fun DrawPoint3D(Vector3, Color) : void = "mac#"
+fun DrawPoint3D( !Mode3D_v | Vector3, Color) : void = "mac#"
 
-fun DrawCircle3D(Vector3, float, Vector3, float, Color) : void = "mac#"
+fun DrawCircle3D( !Mode3D_v | Vector3, float, Vector3, float, Color) : void = "mac#"
 
-fun DrawCube(Vector3, float, float, float, Color) : void = "mac#"
+fun DrawCube( !Mode3D_v | Vector3, float, float, float, Color) : void = "mac#"
 
-fun DrawCubeV(Vector3, Vector3, Color) : void = "mac#"
+fun DrawCubeV( !Mode3D_v | Vector3, Vector3, Color) : void = "mac#"
 
-fun DrawCubeWires(Vector3, float, float, float, Color) : void = "mac#"
+fun DrawCubeWires( !Mode3D_v | Vector3, float, float, float, Color) : void = "mac#"
 
-fun DrawCubeWiresV(Vector3, Vector3, Color) : void = "mac#"
+fun DrawCubeWiresV( !Mode3D_v | Vector3, Vector3, Color) : void = "mac#"
 
-fun DrawCubeTexture(Texture2D, Vector3, float, float, float, Color) : void = "mac#"
+fun DrawCubeTexture( !Mode3D_v | Texture2D, Vector3, float, float, float, Color) : void = "mac#"
 
-fun DrawSphere(Vector3, float, Color) : void = "mac#"
+fun DrawSphere( !Mode3D_v | Vector3, float, Color) : void = "mac#"
 
-fun DrawSphereEx(Vector3, float, int, int, Color) : void = "mac#"
+fun DrawSphereEx( !Mode3D_v | Vector3, float, int, int, Color) : void = "mac#"
 
-fun DrawSphereWires(Vector3, float, int, int, Color) : void = "mac#"
+fun DrawSphereWires( !Mode3D_v | Vector3, float, int, int, Color) : void = "mac#"
 
-fun DrawCylinder(Vector3, float, float, float, int, Color) : void = "mac#"
+fun DrawCylinder( !Mode3D_v | Vector3, float, float, float, int, Color) : void = "mac#"
 
-fun DrawCylinderWires(Vector3, float, float, float, int, Color) : void = "mac#"
+fun DrawCylinderWires( !Mode3D_v | Vector3, float, float, float, int, Color) : void = "mac#"
 
-fun DrawPlane(Vector3, Vector2, Color) : void = "mac#"
+fun DrawPlane( !Mode3D_v | Vector3, Vector2, Color) : void = "mac#"
 
-fun DrawRay(Ray, Color) : void = "mac#"
+fun DrawRay( !Drawing_v | Ray, Color) : void = "mac#"
 
-fun DrawGrid(int, float) : void = "mac#"
+fun DrawGrid( !Drawing_v | int, float) : void = "mac#"
 
-fun DrawGizmo(Vector3) : void = "mac#"
+fun DrawGizmo( !Drawing_v | Vector3) : void = "mac#"
 
 fun LoadModel(string) : Model = "mac#"
 
@@ -1397,19 +1397,19 @@ fun MeshTangents(&Mesh) : void = "mac#"
 
 fun MeshBinormals(&Mesh) : void = "mac#"
 
-fun DrawModel(!Model, Vector3, float, Color) : void = "mac#"
+fun DrawModel( !Mode3D_v | !Model, Vector3, float, Color) : void = "mac#"
 
-fun DrawModelEx(!Model, Vector3, Vector3, float, Vector3, Color) : void = "mac#"
+fun DrawModelEx( !Mode3D_v | !Model, Vector3, Vector3, float, Vector3, Color) : void = "mac#"
 
-fun DrawModelWires(!Model, Vector3, float, Color) : void = "mac#"
+fun DrawModelWires( !Mode3D_v | !Model, Vector3, float, Color) : void = "mac#"
 
-fun DrawModelWiresEx(!Model, Vector3, Vector3, float, Vector3, Color) : void = "mac#"
+fun DrawModelWiresEx( !Mode3D_v | !Model, Vector3, Vector3, float, Vector3, Color) : void = "mac#"
 
-fun DrawBoundingBox(BoundingBox, Color) : void = "mac#"
+fun DrawBoundingBox( !Mode3D_v | BoundingBox, Color) : void = "mac#"
 
-fun DrawBillboard(Camera, !Texture2D, Vector3, float, Color) : void = "mac#"
+fun DrawBillboard( !Mode3D_v | Camera, !Texture2D, Vector3, float, Color) : void = "mac#"
 
-fun DrawBillboardRec(Camera, !Texture2D, Rectangle, Vector3, float, Color) : void = "mac#"
+fun DrawBillboardRec( !Mode3D_v | Camera, !Texture2D, Rectangle, Vector3, float, Color) : void = "mac#"
 
 fun CheckCollisionSpheres(Vector3, float, Vector3, float) : bool = "mac#"
 
@@ -1512,9 +1512,9 @@ fun InitAudioDevice() : (AudioDevice_v | void) = "mac#"
 
 fun CloseAudioDevice(AudioDevice_v |) : void = "mac#"
 
-fun IsAudioDeviceReady() : bool = "mac#"
+fun IsAudioDeviceReady( !AudioDevice_v | ) : bool = "mac#"
 
-fun SetMasterVolume(float) : void = "mac#"
+fun SetMasterVolume( !AudioDevice_v | float) : void = "mac#"
 
 fun LoadWave(string) : Wave = "mac#"
 
@@ -1532,21 +1532,21 @@ fun ExportWave(!Wave, cPtr0(char)) : void = "mac#"
 
 fun ExportWaveAsCode(!Wave, cPtr0(char)) : void = "mac#"
 
-fun PlaySound(!Sound) : void = "mac#"
+fun PlaySound( !AudioDevice_v | !Sound) : void = "mac#"
 
-fun StopSound(!Sound) : void = "mac#"
+fun StopSound( !AudioDevice_v | !Sound) : void = "mac#"
 
-fun PauseSound(!Sound) : void = "mac#"
+fun PauseSound( !AudioDevice_v | !Sound) : void = "mac#"
 
-fun ResumeSound(!Sound) : void = "mac#"
+fun ResumeSound( !AudioDevice_v | !Sound) : void = "mac#"
 
-fun PlaySoundMulti(!Sound) : void = "mac#"
+fun PlaySoundMulti( !AudioDevice_v | !Sound) : void = "mac#"
 
-fun StopSoundMulti() : void = "mac#"
+fun StopSoundMulti( !AudioDevice_v | ) : void = "mac#"
 
-fun GetSoundsPlaying() : int = "mac#"
+fun GetSoundsPlaying( !AudioDevice_v | ) : int = "mac#"
 
-fun IsSoundPlaying(!Sound) : bool = "mac#"
+fun IsSoundPlaying( !AudioDevice_v | !Sound) : bool = "mac#"
 
 fun SetSoundVolume(!Sound, float) : void = "mac#"
 
@@ -1564,17 +1564,17 @@ fun LoadMusicStream(fileName: string) : Music = "mac#"
 
 fun UnloadMusicStream(Music) : void = "mac#"
 
-fun PlayMusicStream(!Music) : void = "mac#"
+fun PlayMusicStream( !AudioDevice_v | !Music) : void = "mac#"
 
-fun UpdateMusicStream(!Music) : void = "mac#"
+fun UpdateMusicStream( !AudioDevice_v | !Music) : void = "mac#"
 
-fun StopMusicStream(!Music) : void = "mac#"
+fun StopMusicStream( !AudioDevice_v | !Music) : void = "mac#"
 
-fun PauseMusicStream(!Music) : void = "mac#"
+fun PauseMusicStream( !AudioDevice_v | !Music) : void = "mac#"
 
-fun ResumeMusicStream(!Music) : void = "mac#"
+fun ResumeMusicStream( !AudioDevice_v | !Music) : void = "mac#"
 
-fun IsMusicPlaying(!Music) : bool = "mac#"
+fun IsMusicPlaying( !AudioDevice_v | !Music) : bool = "mac#"
 
 fun SetMusicVolume(!Music, float) : void = "mac#"
 

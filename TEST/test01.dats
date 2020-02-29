@@ -17,13 +17,13 @@ implement main0 ()
       val () = begin
         loop( WIN | ) where {
           fun loop ( WIN: Window_v | ) : void =
-            if ~WindowShouldClose() 
+            if ~WindowShouldClose(WIN | ) 
             then let
                 val (DRAW | ()) 
                   = BeginDrawing(WIN | );
                 val () = (
-                  ClearBackground( RAYWHITE );
-                  DrawText("Congrats! You just created your first window!", 190, 200, 20, LIGHTGRAY);
+                  ClearBackground( DRAW | RAYWHITE );
+                  DrawText(DRAW | "Congrats! You just created your first window!", 190, 200, 20, LIGHTGRAY);
                 )
                 val (WIN | ()) 
                   = EndDrawing(DRAW | );
