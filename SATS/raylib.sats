@@ -1136,7 +1136,7 @@ fun GetPixelDataSize(int, int, int) : int = "mac#"
 
 fun GetTextureData(!Texture2D) : Image = "mac#"
 
-fun GetScreenData() : Image = "mac#"
+fun GetScreenData(!Window_v |) : Image = "mac#"
 
 fun UpdateTexture(!Texture2D, cPtr0(void)) : void = "mac#"
 
@@ -1495,23 +1495,25 @@ fun BeginBlendMode(BlendMode)
 
 fun EndBlendMode(BlendMode_v |) : void = "mac#"
 
-absview VrSim_v
+absview VrSim_v(l:addr,b:bool)
+viewdef VrSim_v = [l:addr][b:bool] VrSim_v(l,b)
 fun InitVrSimulator() : (VrSim_v | void) = "mac#"
 
 fun CloseVrSimulator(VrSim_v |) : void = "mac#"
 
-fun UpdateVrTracking(cPtr0(Camera)) : void = "mac#"
+fun UpdateVrTracking(!VrSim_v | &Camera) : void = "mac#"
 
-fun SetVrConfiguration(VrDeviceInfo, !Shader) : void = "mac#"
+fun SetVrConfiguration(!VrSim_v | VrDeviceInfo, !Shader) : void = "mac#"
 
-fun IsVrSimulatorReady() : bool = "mac#"
+fun IsVrSimulatorReady{l:addr}{b:bool}( !VrSim_v(l,b) | ) : bool b = "mac#"
 
-fun ToggleVrMode() : void = "mac#"
+fun ToggleVrMode{l:addr}{b:bool}(!VrSim_v(l,b) >> VrSim_v(l,~b) |) : void = "mac#"
 
-absview VrDrawing_v
-fun BeginVrDrawing() : (VrDrawing_v | void) = "mac#"
+absview VrDrawing_v(l:addr)
+viewdef VrDrawing_v = [l:addr] VrDrawing_v(l)
+fun BeginVrDrawing{l:addr}( VrSim_v(l,true) |) : (VrDrawing_v(l) | void) = "mac#"
 
-fun EndVrDrawing(VrDrawing_v |) : void = "mac#"
+fun EndVrDrawing{l:addr}( VrDrawing_v(l) |) : (VrSim_v(l,true) | void) = "mac#"
 
 absview AudioDevice_v
 fun InitAudioDevice() : (AudioDevice_v | void) = "mac#"
@@ -1614,5 +1616,5 @@ fun SetAudioStreamVolume(!AudioStream, float) : void = "mac#"
 
 fun SetAudioStreamPitch(!AudioStream, float) : void = "mac#"
 
-fun SetAudioStreamBufferSizeDefault(int) : void = "mac#"
+fun SetAudioStreamBufferSizeDefault(!AudioDevice_v | int) : void = "mac#"
 
