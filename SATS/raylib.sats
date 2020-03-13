@@ -703,7 +703,8 @@ macdef CAMERA_THIRD_PERSON = $extval(CameraMode,"CAMERA_THIRD_PERSON")
 
 //typedef TraceLogCallback = (int, cPtr0(char), va_list) -> void
 
-absview Window_v
+absview Window_v(l:addr)
+viewdef Window_v = [l:addr] Window_v(l)
 fun InitWindow(int, int, string) 
   : (Window_v | void) = "mac#"
 
@@ -737,43 +738,44 @@ fun SetWindowMinSize( !Window_v | int, int) : void = "mac#"
 
 fun SetWindowSize( !Window_v | int, int) : void = "mac#"
 
-fun GetWindowHandle( !Window_v | ) : ptr = "mac#"
+fun GetWindowHandle{l:addr}( !Window_v | ) : ptr l = "mac#"
 
 (** Check to see if these are dependent on windowing **)
 
-fun GetScreenWidth() : int = "mac#"
+fun GetScreenWidth(!Window_v |) : int = "mac#"
 
-fun GetScreenHeight() : int = "mac#"
+fun GetScreenHeight(!Window_v |) : int = "mac#"
 
-fun GetMonitorCount() : int = "mac#"
+fun GetMonitorCount(!Window_v |) : int = "mac#"
 
-fun GetMonitorWidth(int) : int = "mac#"
+fun GetMonitorWidth(!Window_v |int) : int = "mac#"
 
-fun GetMonitorHeight(int) : int = "mac#"
+fun GetMonitorHeight(!Window_v |int) : int = "mac#"
 
-fun GetMonitorPhysicalWidth(int) : int = "mac#"
+fun GetMonitorPhysicalWidth(!Window_v |int) : int = "mac#"
 
-fun GetMonitorPhysicalHeight(int) : int = "mac#"
+fun GetMonitorPhysicalHeight(!Window_v |int) : int = "mac#"
 
-fun GetWindowPosition() : Vector2 = "mac#"
+fun GetWindowPosition(!Window_v |) : Vector2 = "mac#"
 
-fun GetMonitorName(int) : string = "mac#"
+fun GetMonitorName(!Window_v |int) : string = "mac#"
 
-fun GetClipboardText() : string = "mac#"
+fun GetClipboardText(!Window_v |) : string = "mac#"
 
-fun SetClipboardText(string) : void = "mac#"
+fun SetClipboardText(!Window_v |string) : void = "mac#"
 
-fun ShowCursor() : void = "mac#"
+fun ShowCursor(!Window_v |) : void = "mac#"
 
-fun HideCursor() : void = "mac#"
+fun HideCursor(!Window_v |) : void = "mac#"
 
-fun IsCursorHidden() : bool = "mac#"
+fun IsCursorHidden(!Window_v |) : bool = "mac#"
 
-fun EnableCursor() : void = "mac#"
+fun EnableCursor(!Window_v |) : void = "mac#"
 
-fun DisableCursor() : void = "mac#"
+fun DisableCursor(!Window_v |) : void = "mac#"
 
-absview Drawing_v
+absview Drawing_v(l:addr)
+viewdef Drawing_v = [l:addr] Drawing_v(l)
 fun ClearBackground( !Drawing_v | Color) : void = "mac#"
 
 (** The modes need to be vetted for usability
@@ -782,39 +784,43 @@ fun ClearBackground( !Drawing_v | Color) : void = "mac#"
     and I'm not sure if anyone is likely to 
     mess this stuff up.
 **)
-fun BeginDrawing(Window_v |) 
-  : (Drawing_v | void) = "mac#"
+fun BeginDrawing{l:addr}(!Window_v(l) |) 
+  : (Drawing_v(l) | void) = "mac#"
 
-fun EndDrawing(Drawing_v |) 
-  : (Window_v | void) = "mac#"
+fun EndDrawing{l:addr}(Drawing_v(l) |) 
+  : void = "mac#"
 
-absview Mode2D_v
-fun BeginMode2D(Drawing_v | Camera2D) 
-  : (Mode2D_v | void) = "mac#"
+absview Mode2D_v(l:addr)
+viewdef Mode2D_v = [l:addr] Mode2D_v(l)
+fun BeginMode2D{l:addr}(Drawing_v(l) | Camera2D) 
+  : (Mode2D_v(l) | void) = "mac#"
 
-fun EndMode2D(Mode2D_v |) 
-  : (Drawing_v | void) = "mac#"
+fun EndMode2D{l:addr}(Mode2D_v(l) |) 
+  : (Drawing_v(l) | void) = "mac#"
 
-absview Mode3D_v
-fun BeginMode3D(Drawing_v | Camera3D) 
-  : (Mode3D_v | void) = "mac#"
+absview Mode3D_v(l:addr)
+viewdef Mode3D_v = [l:addr] Mode3D_v(l)
+fun BeginMode3D{l:addr}(Drawing_v(l) | Camera3D) 
+  : (Mode3D_v(l) | void) = "mac#"
 
-fun EndMode3D(Mode3D_v |) 
-  : (Drawing_v | void) = "mac#"
+fun EndMode3D{l:addr}(Mode3D_v(l) |) 
+  : (Drawing_v(l) | void) = "mac#"
 
-absview TextureMode_v
-fun BeginTextureMode(Drawing_v | !RenderTexture2D) 
-  : (TextureMode_v | void) = "mac#"
+absview TextureMode_v(l:addr)
+viewdef TextureMode_v = [l:addr] TextureMode_v(l)
+fun BeginTextureMode{l:addr}(Drawing_v(l) | !RenderTexture2D) 
+  : (TextureMode_v(l) | void) = "mac#"
 
-fun EndTextureMode(TextureMode_v | ) 
-  : (Drawing_v | void) = "mac#"
+fun EndTextureMode{l:addr}(TextureMode_v(l) | ) 
+  : (Drawing_v(l) | void) = "mac#"
 
-absview ScissorMode_v
-fun BeginScissorMode(Drawing_v | x: int, y: int, width: int, height: int) 
-  : (ScissorMode_v | void) = "mac#"
+absview ScissorMode_v(l:addr)
+viewdef ScissorMode_v = [l:addr] ScissorMode_v(l)
+fun BeginScissorMode{l:addr}(!Drawing_v(l) | x: int, y: int, width: int, height: int) 
+  : (ScissorMode_v(l) | void) = "mac#"
 
-fun EndScissorMode(ScissorMode_v |) 
-  : (Drawing_v | void) = "mac#"
+fun EndScissorMode{l:addr}(ScissorMode_v(l) |) 
+  : void = "mac#"
 
 fun GetMouseRay(Vector2, Camera) : Ray = "mac#"
 
@@ -830,11 +836,11 @@ fun GetWorldToScreen2D(Vector2, Camera2D) : Vector2 = "mac#"
 
 fun GetScreenToWorld2D(Vector2, Camera2D) : Vector2 = "mac#"
 
-fun SetTargetFPS(int) : void = "mac#"
+fun SetTargetFPS(!Window_v | int) : void = "mac#"
 
-fun GetFPS() : int = "mac#"
+fun GetFPS(!Window_v |) : int = "mac#"
 
-fun GetFrameTime() : float = "mac#"
+fun GetFrameTime(!Window_v |) : float = "mac#"
 
 fun GetTime() : double = "mac#"
 
@@ -862,7 +868,7 @@ fun SetTraceLogExit(int) : void = "mac#"
 
 //fun TraceLog(int, cPtr0(char), VARARGS) : void = "mac#"
 
-fun TakeScreenshot(filename: string) : void = "mac#"
+fun TakeScreenshot(!Window_v | filename: string) : void = "mac#"
 
 fun GetRandomValue(int, int) : int = "mac#"
 
@@ -922,19 +928,19 @@ fun LoadStorageValue(int) : int = "mac#"
 
 fun OpenURL(string) : void = "mac#"
 
-fun IsKeyPressed(KeyboardKey) : bool = "mac#"
+fun IsKeyPressed(!Window_v | KeyboardKey) : bool = "mac#"
 
-fun IsKeyDown(KeyboardKey) : bool = "mac#"
+fun IsKeyDown(!Window_v | KeyboardKey) : bool = "mac#"
 
-fun IsKeyReleased(KeyboardKey) : bool = "mac#"
+fun IsKeyReleased(!Window_v | KeyboardKey) : bool = "mac#"
 
-fun IsKeyUp(KeyboardKey) : bool = "mac#"
+fun IsKeyUp(!Window_v | KeyboardKey) : bool = "mac#"
 
-fun SetExitKey(KeyboardKey) : void = "mac#"
+fun SetExitKey(!Window_v | KeyboardKey) : void = "mac#"
 
-fun GetKeyPressed() : KeyboardKey = "mac#"
+fun GetKeyPressed(!Window_v | ) : KeyboardKey = "mac#"
 
-fun IsGamepadAvailable(GamepadNumber) : bool = "mac#"
+fun IsGamepadAvailable(!Window_v | GamepadNumber) : bool = "mac#"
 
 fun IsGamepadName(GamepadNumber, string) : bool = "mac#"
 
@@ -948,69 +954,69 @@ fun IsGamepadButtonReleased(GamepadNumber, GamepadButton) : bool = "mac#"
 
 fun IsGamepadButtonUp(GamepadNumber, GamepadButton) : bool = "mac#"
 
-fun GetGamepadButtonPressed() : int = "mac#"
+fun GetGamepadButtonPressed(!Window_v | ) : int = "mac#"
 
 fun GetGamepadAxisCount(GamepadNumber) : int = "mac#"
 
 fun GetGamepadAxisMovement(GamepadNumber, GamepadAxis) : float = "mac#"
 
-fun IsMouseButtonPressed(MouseButton) : bool = "mac#"
+fun IsMouseButtonPressed(!Window_v | MouseButton) : bool = "mac#"
 
-fun IsMouseButtonDown(MouseButton) : bool = "mac#"
+fun IsMouseButtonDown(!Window_v | MouseButton) : bool = "mac#"
 
-fun IsMouseButtonReleased(MouseButton) : bool = "mac#"
+fun IsMouseButtonReleased(!Window_v | MouseButton) : bool = "mac#"
 
-fun IsMouseButtonUp(MouseButton) : bool = "mac#"
+fun IsMouseButtonUp(!Window_v | MouseButton) : bool = "mac#"
 
-fun GetMouseX() : int = "mac#"
+fun GetMouseX(!Window_v | ) : int = "mac#"
 
-fun GetMouseY() : int = "mac#"
+fun GetMouseY(!Window_v | ) : int = "mac#"
 
-fun GetMousePosition() : Vector2 = "mac#"
+fun GetMousePosition(!Window_v | ) : Vector2 = "mac#"
 
-fun SetMousePosition(int, int) : void = "mac#"
+fun SetMousePosition(!Window_v | int, int) : void = "mac#"
 
-fun SetMouseOffset(int, int) : void = "mac#"
+fun SetMouseOffset(!Window_v | int, int) : void = "mac#"
 
-fun SetMouseScale(float, float) : void = "mac#"
+fun SetMouseScale(!Window_v | float, float) : void = "mac#"
 
-fun GetMouseWheelMove() : int = "mac#"
+fun GetMouseWheelMove(!Window_v | ) : int = "mac#"
 
-fun GetTouchX() : int = "mac#"
+fun GetTouchX(!Window_v | ) : int = "mac#"
 
-fun GetTouchY() : int = "mac#"
+fun GetTouchY(!Window_v | ) : int = "mac#"
 
-fun GetTouchPosition(int) : Vector2 = "mac#"
+fun GetTouchPosition(!Window_v | int) : Vector2 = "mac#"
 
-fun SetGesturesEnabled(GestureType) : void = "mac#"
+fun SetGesturesEnabled(!Window_v | GestureType) : void = "mac#"
 
-fun IsGestureDetected(GestureType) : bool = "mac#"
+fun IsGestureDetected(!Window_v | GestureType) : bool = "mac#"
 
-fun GetGestureDetected() : int = "mac#"
+fun GetGestureDetected(!Window_v | ) : int = "mac#"
 
-fun GetTouchPointsCount() : int = "mac#"
+fun GetTouchPointsCount(!Window_v | ) : int = "mac#"
 
-fun GetGestureHoldDuration() : float = "mac#"
+fun GetGestureHoldDuration(!Window_v | ) : float = "mac#"
 
-fun GetGestureDragVector() : Vector2 = "mac#"
+fun GetGestureDragVector(!Window_v | ) : Vector2 = "mac#"
 
-fun GetGestureDragAngle() : float = "mac#"
+fun GetGestureDragAngle(!Window_v | ) : float = "mac#"
 
-fun GetGesturePinchVector() : Vector2 = "mac#"
+fun GetGesturePinchVector(!Window_v | ) : Vector2 = "mac#"
 
-fun GetGesturePinchAngle() : float = "mac#"
+fun GetGesturePinchAngle(!Window_v | ) : float = "mac#"
 
 fun SetCameraMode(Camera, CameraMode) : void = "mac#"
 
 fun UpdateCamera(cPtr0(Camera)) : void = "mac#"
 
-fun SetCameraPanControl(int) : void = "mac#"
+fun SetCameraPanControl(!Window_v | int) : void = "mac#"
 
-fun SetCameraAltControl(int) : void = "mac#"
+fun SetCameraAltControl(!Window_v | int) : void = "mac#"
 
-fun SetCameraSmoothZoomControl(int) : void = "mac#"
+fun SetCameraSmoothZoomControl(!Window_v | int) : void = "mac#"
 
-fun SetCameraMoveControls(int, int, int, int, int, int) : void = "mac#"
+fun SetCameraMoveControls(!Window_v | int, int, int, int, int, int) : void = "mac#"
 
 fun DrawPixel( !Drawing_v | int, int, Color) : void = "mac#"
 
@@ -1453,9 +1459,9 @@ fun SetShapesTexture(!Texture2D, Rectangle) : void = "mac#"
 
 fun GetShaderLocation(!Shader, string) : int = "mac#"
 
-fun SetShaderValue{a:t@ype+}(!Shader, int, &a? >> a, ShaderUniformDataType(a) ) : void = "mac#"
+fun SetShaderValue{a:t@ype+}(!Shader, int, &a, ShaderUniformDataType(a) ) : void = "mac#"
 
-fun SetShaderValueV{a:t@ype+}{n:nat}(Shader, int, &array(a?,n) >> array(a,n), ShaderUniformDataType(a), int n) : void = "mac#"
+fun SetShaderValueV{a:t@ype+}{n:nat}(Shader, int, &array(a,n), ShaderUniformDataType(a), int n) : void = "mac#"
 
 fun SetShaderValueMatrix(!Shader, int, Matrix) : void = "mac#"
 

@@ -25,20 +25,20 @@ implement main0 ()
           , "[test02] - Keyboard input" );
 
       val () = begin
-        SetTargetFPS( 60 );
+        SetTargetFPS( WIN | 60 );
         loop( WIN | ballPosition ) where {
-          fun loop (WIN: Window_v | ballPosition : &Vector2  ) : void =
+          fun loop{l:addr}(WIN: Window_v(l) | ballPosition : &Vector2  ) : void =
             if ~WindowShouldClose( WIN | ) 
             then let
                 val () = 
                   ( ifcase
-                     | IsKeyDown(KEY_RIGHT) => 
+                     | IsKeyDown( WIN | KEY_RIGHT) => 
                           ballPosition.x := ballPosition.x + 2.0f
-                     | IsKeyDown(KEY_LEFT) => 
+                     | IsKeyDown( WIN | KEY_LEFT) => 
                           ballPosition.x := ballPosition.x - 2.0f
-                     | IsKeyDown(KEY_UP) => 
+                     | IsKeyDown( WIN | KEY_UP) => 
                           ballPosition.y := ballPosition.y - 2.0f
-                     | IsKeyDown(KEY_DOWN) => 
+                     | IsKeyDown( WIN | KEY_DOWN) => 
                           ballPosition.y := ballPosition.y + 2.0f
                      | _ => ()
                   );
@@ -49,7 +49,7 @@ implement main0 ()
                   DrawText( DRAW | "Move the ball with arrow keys", 10, 10, 20, DARKGRAY);
                   DrawCircleV( DRAW | ballPosition, 50.0f, MAROON );
                 )
-                val (WIN | ()) 
+                val () 
                   = EndDrawing(DRAW | );
               in
                 loop( WIN | ballPosition )

@@ -25,8 +25,7 @@ implement main0 ()
                   ClearBackground( DRAW | RAYWHITE );
                   DrawText(DRAW | "Congrats! You just created your first window!", 190, 200, 20, LIGHTGRAY);
                 )
-                val (WIN | ()) 
-                  = EndDrawing(DRAW | );
+                val () = EndDrawing(DRAW | );
               in
                  loop( WIN | ) 
              end
