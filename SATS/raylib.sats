@@ -20,6 +20,7 @@ macdef PI = $extval(float, "PI")
 macdef RAD2DEG = $extval(float, "RAD2DEG")
 macdef DEG2RAD = $extval(float, "DEG2RAD")
 
+
 //macdef SubText = $extval(int, "SubText")
 //macdef ShowWindow = $extval(int, "ShowWindow")
 //macdef FormatText = $extval(int, "FormatText")
@@ -255,7 +256,7 @@ vtypedef Mesh(v:int,t:int) = $extype_struct"Mesh" of {
  , normals = arrayptr(float,3*v)
  , tangents = arrayptr(float,4*v)
  , colors = arrayptr(uchar,4*v)
- , indices = cPtr0(usint)
+ , indices = arrayptr(usint,3*v)
  , animVertices = arrayptr(float,3*v)
  , animNormals = arrayptr(float,3*v)
  , boneIds = cPtr0(int)
@@ -290,7 +291,7 @@ typedef Transform = $extype_struct"Transform" of {
 }
 
 typedef BoneInfo = $extype_struct"BoneInfo" of {
-   name = char
+   name = @[char][32]
  , parent = int
 }
 
@@ -393,8 +394,8 @@ typedef VrDeviceInfo = $extype_struct"VrDeviceInfo" of {
  , eyeToScreenDistance = float
  , lensSeparationDistance = float
  , interpupillaryDistance = float
- , lensDistortionValues = float
- , chromaAbCorrection = float
+ , lensDistortionValues = @[float][4]
+ , chromaAbCorrection = @[float][4]
 }
 
 abst@ype ConfigFlag = $extype"ConfigFlag"
@@ -748,9 +749,9 @@ fun GetScreenHeight(!Window_v |) : int = "mac#"
 
 fun GetMonitorCount(!Window_v |) : int = "mac#"
 
-fun GetMonitorWidth(!Window_v |int) : int = "mac#"
+fun GetMonitorWidth(!Window_v | int) : int = "mac#"
 
-fun GetMonitorHeight(!Window_v |int) : int = "mac#"
+fun GetMonitorHeight(!Window_v | int) : int = "mac#"
 
 fun GetMonitorPhysicalWidth(!Window_v |int) : int = "mac#"
 
@@ -758,7 +759,7 @@ fun GetMonitorPhysicalHeight(!Window_v |int) : int = "mac#"
 
 fun GetWindowPosition(!Window_v |) : Vector2 = "mac#"
 
-fun GetMonitorName(!Window_v |int) : string = "mac#"
+fun GetMonitorName(!Window_v | int) : string = "mac#"
 
 fun GetClipboardText(!Window_v |) : string = "mac#"
 
@@ -792,7 +793,7 @@ fun EndDrawing{l:addr}(Drawing_v(l) |)
 
 absview Mode2D_v(l:addr)
 viewdef Mode2D_v = [l:addr] Mode2D_v(l)
-fun BeginMode2D{l:addr}(Drawing_v(l) | Camera2D) 
+fun BeginMode2D{l:addr}( Drawing_v(l) | Camera2D) 
   : (Mode2D_v(l) | void) = "mac#"
 
 fun EndMode2D{l:addr}(Mode2D_v(l) |) 
@@ -872,9 +873,9 @@ fun TakeScreenshot(!Window_v | filename: string) : void = "mac#"
 
 fun GetRandomValue(int, int) : int = "mac#"
 
-fun LoadFileData(fileName: string, bytesRead : &int? >> int ) : cPtr0(uchar) = "mac#"
+fun LoadFileData(fileName: string, bytesRead : &int? >> int n ) : #[n:nat] arrayptr(uchar,n) = "mac#"
 
-fun SaveFileData(fileName:string, data:ptr, bytesRead: int) : void = "mac#"
+fun SaveFileData{n:nat}(fileName:string, data: &bytes(n), bytesToWrite: int n) : void = "mac#"
 
 fun FileExists(string) : bool = "mac#"
 
@@ -1008,7 +1009,7 @@ fun GetGesturePinchAngle(!Window_v | ) : float = "mac#"
 
 fun SetCameraMode(Camera, CameraMode) : void = "mac#"
 
-fun UpdateCamera(cPtr0(Camera)) : void = "mac#"
+fun UpdateCamera(&Camera) : void = "mac#"
 
 fun SetCameraPanControl(!Window_v | int) : void = "mac#"
 
@@ -1272,21 +1273,26 @@ fun MeasureTextEx(!Font, string, float, float) : Vector2 = "mac#"
 
 fun GetGlyphIndex(!Font, int) : int = "mac#"
 
-fun TextCopy(cPtr0(char), cPtr0(char)) : int = "mac#"
+fun TextCopy{n,m:nat | m >= n}(&array(char,m), string n) : int n = "mac#"
 
-fun TextIsEqual(cPtr0(char), cPtr0(char)) : bool = "mac#"
+fun TextIsEqual(string, string) : bool = "mac#"
 
-fun TextLength(cPtr0(char)) : uint = "mac#"
+fun TextLength{n:nat}(string n) : uint n = "mac#"
 
-//fun TextFormat(cPtr0(char), VARARGS) : cPtr0(char) = "mac#"
-
-fun TextSubtext(cPtr0(char), int, int) : cPtr0(char) = "mac#"
 
 fun TextReplace(text:string, replace: string, by: string) : Strptr0 = "mac#"
 
 fun TextInsert(string, string, pos: int) : Strptr0 = "mac#"
 
-fun TextJoin(cPtr0(cPtr0(char)), int, cPtr0(char)) : cPtr0(char) = "mac#"
+fun TextToUtf8{n:nat}(&array(int,n), int n) : Strptr0 = "mac#"
+
+(** Warning: these use a static buffer of 1024 bytes; be careful **)
+(*
+
+//fun TextFormat(cPtr0(char), VARARGS) : cPtr0(char) = "mac#"
+
+fun TextSubtext{n,p,l:nat | n < 1024; p <= n; l <= (n - p)}(string n, pos: int p, len: int l) : cPtr0(char) = "mac#"
+fun TextJoin{n:nat}(&array(string,n), int n, delim: string) : cPtr0(char) = "mac#"
 
 fun TextSplit(cPtr0(char), char, cPtr0(int)) : cPtr0(cPtr0(char)) = "mac#"
 
@@ -1302,16 +1308,15 @@ fun TextToPascal(cPtr0(char)) : cPtr0(char) = "mac#"
 
 fun TextToInteger(cPtr0(char)) : int = "mac#"
 
-fun TextToUtf8{n:nat}(&array(int,n), int n) : Strptr0 = "mac#"
-
+*)
 (** FIXME: see if this must be freed **)
 fun GetCodepoints(string, &int? >> int n ) : #[n:nat] arrayref(int,n) = "mac#"
 
 fun GetCodepointsCount(string) : int = "mac#"
 
-fun GetNextCodepoint(cPtr0(char), cPtr0(int)) : int = "mac#"
+fun GetNextCodepoint{n:nat}(string n, &int? >> int m) : #[m:nat | m <= n] int = "mac#"
 
-fun CodepointToUtf8(int, &int? >> int n) : #[n:nat] arrayref(char,n) = "mac#"
+fun CodepointToUtf8(int, &int? >> int n) : #[n:nat] cPtr0(char) = "mac#"
 
 fun DrawLine3D( !Mode3D_v | Vector3, Vector3, Color) : void = "mac#"
 
