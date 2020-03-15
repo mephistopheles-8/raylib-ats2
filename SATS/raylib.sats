@@ -1287,9 +1287,6 @@ fun TextInsert(string, string, pos: int) : Strptr0 = "mac#"
 fun TextToUtf8{n:nat}(&array(int,n), int n) : Strptr0 = "mac#"
 
 (** Warning: these use a static buffer of 1024 bytes; be careful **)
-(*
-
-//fun TextFormat(cPtr0(char), VARARGS) : cPtr0(char) = "mac#"
 
 fun TextSubtext{n,p,l:nat | n < 1024; p <= n; l <= (n - p)}(string n, pos: int p, len: int l) : cPtr0(char) = "mac#"
 fun TextJoin{n:nat}(&array(string,n), int n, delim: string) : cPtr0(char) = "mac#"
@@ -1308,7 +1305,8 @@ fun TextToPascal(cPtr0(char)) : cPtr0(char) = "mac#"
 
 fun TextToInteger(cPtr0(char)) : int = "mac#"
 
-*)
+(**** ****)
+
 (** FIXME: see if this must be freed **)
 fun GetCodepoints(string, &int? >> int n ) : #[n:nat] arrayref(int,n) = "mac#"
 
