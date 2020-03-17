@@ -21,6 +21,7 @@ macdef PI = $extval(float, "PI")
 macdef RAD2DEG = $extval(float, "RAD2DEG")
 macdef DEG2RAD = $extval(float, "DEG2RAD")
 
+stadef MAX_MATERIAL_MAPS : int = 10
 
 //macdef SubText = $extval(int, "SubText")
 //macdef ShowWindow = $extval(int, "ShowWindow")
@@ -279,9 +280,9 @@ vtypedef MaterialMap = $extype_struct"MaterialMap" of {
  , value = float
 }
 
-vtypedef Material = $extype_struct"Material" of {
+absvt@ype Material = $extype_struct"Material" of {
    shader = Shader
- , maps = cPtr0(MaterialMap)
+ , maps = arrayptr(MaterialMap,MAX_MATERIAL_MAPS + 1)
  , params = cPtr0(float)
 }
 
@@ -626,21 +627,27 @@ macdef UNIFORM_IVEC3 = $extval(ShaderUniformDataType(IVector3),"UNIFORM_IVEC3")
 macdef UNIFORM_IVEC4 = $extval(ShaderUniformDataType(IVector4),"UNIFORM_IVEC4")
 macdef UNIFORM_SAMPLER2D = $extval(ShaderUniformDataType(int32),"UNIFORM_SAMPLER2D")
 
-abst@ype MaterialMapType = $extype"MaterialMapType"
+abst@ype MaterialMapType(n:int) = $extype"MaterialMapType"
+typedef MaterialMapType = [n:nat | n <= MAX_MATERIAL_MAPS ] MaterialMapType(n)
 
-macdef MAP_ALBEDO = $extval(MaterialMapType,"MAP_ALBEDO")
-macdef MAP_METALNESS = $extval(MaterialMapType,"MAP_METALNESS")
-macdef MAP_NORMAL = $extval(MaterialMapType,"MAP_NORMAL")
-macdef MAP_ROUGHNESS = $extval(MaterialMapType,"MAP_ROUGHNESS")
-macdef MAP_OCCLUSION = $extval(MaterialMapType,"MAP_OCCLUSION")
-macdef MAP_EMISSION = $extval(MaterialMapType,"MAP_EMISSION")
-macdef MAP_HEIGHT = $extval(MaterialMapType,"MAP_HEIGHT")
-macdef MAP_CUBEMAP = $extval(MaterialMapType,"MAP_CUBEMAP")
-macdef MAP_IRRADIANCE = $extval(MaterialMapType,"MAP_IRRADIANCE")
-macdef MAP_PREFILTER = $extval(MaterialMapType,"MAP_PREFILTER")
-macdef MAP_BRDF = $extval(MaterialMapType,"MAP_BRDF")
-macdef MAP_DIFFUSE = $extval(MaterialMapType, "MAP_DIFFUSE")
-macdef MAP_SPECULAR = $extval(MaterialMapType, "MAP_SPECULAR")
+macdef MAP_ALBEDO = $extval(MaterialMapType(0),"MAP_ALBEDO")
+macdef MAP_METALNESS = $extval(MaterialMapType(1),"MAP_METALNESS")
+macdef MAP_NORMAL = $extval(MaterialMapType(2),"MAP_NORMAL")
+macdef MAP_ROUGHNESS = $extval(MaterialMapType(3),"MAP_ROUGHNESS")
+macdef MAP_OCCLUSION = $extval(MaterialMapType(4),"MAP_OCCLUSION")
+macdef MAP_EMISSION = $extval(MaterialMapType(5),"MAP_EMISSION")
+macdef MAP_HEIGHT = $extval(MaterialMapType(6),"MAP_HEIGHT")
+macdef MAP_CUBEMAP = $extval(MaterialMapType(7),"MAP_CUBEMAP")
+macdef MAP_IRRADIANCE = $extval(MaterialMapType(8),"MAP_IRRADIANCE")
+macdef MAP_PREFILTER = $extval(MaterialMapType(9),"MAP_PREFILTER")
+macdef MAP_BRDF = $extval(MaterialMapType(10),"MAP_BRDF")
+
+macdef MAP_DIFFUSE = MAP_ALBEDO
+macdef MAP_SPECULAR = MAP_METALNESS
+
+
+castfn MaterialMapType_int{n:nat}( MaterialMapType(n) ) : int n
+overload int with MaterialMapType_int
 
 abst@ype TextureFilterMode = $extype"TextureFilterMode"
 
@@ -1345,11 +1352,11 @@ fun DrawCylinderWires( !Mode3D_v | Vector3, float, float, float, int, Color) : v
 
 fun DrawPlane( !Mode3D_v | Vector3, Vector2, Color) : void = "mac#"
 
-fun DrawRay( !Drawing_v | Ray, Color) : void = "mac#"
+fun DrawRay( !Mode3D_v | Ray, Color) : void = "mac#"
 
 fun DrawGrid( !Mode3D_v | int, float) : void = "mac#"
 
-fun DrawGizmo( !Drawing_v | Vector3) : void = "mac#"
+fun DrawGizmo( !Mode3D_v | Vector3) : void = "mac#"
 
 fun LoadModel(string) : Model = "mac#"
 
@@ -1369,7 +1376,10 @@ fun LoadMaterialDefault() : Material = "mac#"
 
 fun UnloadMaterial(Material) : void = "mac#"
 
-fun SetMaterialTexture(&Material, MaterialMapType, Texture2D) : void = "mac#"
+(** NOTE: the texture cannot be freed while the material is
+    in use.
+ **)
+fun SetMaterialTexture(&Material, MaterialMapType, !Texture2D) : void = "mac#"
 
 fun SetModelMeshMaterial(model: &Model, meshId: int, materialId: int) : void = "mac#"
 
@@ -1469,7 +1479,7 @@ fun SetShaderValueV{a:t@ype+}{n:nat}(Shader, int, &array(a,n), ShaderUniformData
 
 fun SetShaderValueMatrix(!Shader, int, Matrix) : void = "mac#"
 
-fun SetShaderValueTexture(!Shader, int, Texture2D) : void = "mac#"
+fun SetShaderValueTexture(!Shader, int, !Texture2D) : void = "mac#"
 
 fun SetMatrixProjection(Matrix) : void = "mac#"
 
