@@ -21,6 +21,14 @@ all:: test03
 test03: test03.dats ; $(PATSCC) $(PATSFLAGS) $(CFLAGS)  -o $@ $< $(LFLAGS) 
 cleanall:: ; $(RMF) test03
 
+all:: test04
+test04: test04.dats ; $(PATSCC) $(PATSFLAGS) $(CFLAGS)  -o $@ $< $(LFLAGS) 
+cleanall:: ; $(RMF) test04
+
+all:: test05
+test05: test05.dats ; $(PATSCC) $(PATSFLAGS) $(CFLAGS)  -o $@ $< $(LFLAGS) 
+cleanall:: ; $(RMF) test05
+
 cleanall:: ; $(RMF) *_*ats.c
 
 clean:: cleanall

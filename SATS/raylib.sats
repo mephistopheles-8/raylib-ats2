@@ -1,7 +1,8 @@
 (**
  ** [ raylib ]
  **  
- ** raw raylib bindings for ATS2
+ ** raylib bindings for ATS2, with effect tracking
+ ** and viewtypes
  **
  ** Project: raylib-ats2
  ** Author : M. Bellaire
