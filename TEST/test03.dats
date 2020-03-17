@@ -8,6 +8,17 @@
 #include "share/atspre_staload.hats"
 #include "./../mylibies.hats"
 
+(** It would be frustrating to model this safely **)
+%{
+static void 
+_set_model_diffuse_texture( Model * model, Texture2D texture ) {
+    model->materials[0].maps[MAP_DIFFUSE].texture = texture;
+}
+%}
+
+extern
+fun _set_model_diffuse_texture( &Model, !Texture2D ) : void = "mac#"
+
 implement main0 () 
   = println!("Hello [test03]") where 
     {
@@ -21,7 +32,7 @@ implement main0 ()
           , "[test03] - [models] example - mesh generation" );
 
       val checked : Image = GenImageChecked(2,2,1,1,RED,GREEN)
-      val texture : Texture2D = LoadTextureFromImage(WIN | checked)
+      var texture : Texture2D = LoadTextureFromImage(WIN | checked)
       val () = UnloadImage( checked )
 
       var models = @[Model][NUM_MODELS]()
@@ -41,6 +52,12 @@ implement main0 ()
               | _ => GenMeshPoly(5,2.0f)
           }
       }
+      val _ = array_foreach_env<Model><Texture2D>( models, i2sz(NUM_MODELS), texture )
+        where {
+          implement
+          array_foreach$fwork<Model><Texture2D>( x, tex ) 
+              = _set_model_diffuse_texture( x , tex )
+        }
 
       var camera : Camera
       var position : Vector3
@@ -114,7 +131,7 @@ implement main0 ()
                 val (pf, pff | p)
                   = array_ptr_takeout( view@models | addr@models, i2sz( currentModel ) )
 
-                val () =    DrawModel( M3D | !p, position, 1.0f, WHITE)
+                val () =    DrawModel( M3D | !p, position, 1.0f, PURPLE)
 
                 prval pfa = pff( pf )
                 prval () = view@models := pfa
