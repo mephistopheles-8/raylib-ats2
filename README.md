@@ -1,13 +1,27 @@
 # raylib-ats2
 
-Raw bindings to [raylib](https://www.raylib.com/) for ATS2.
+Bindings to [raylib](https://www.raylib.com/) for ATS2.
 
-These bindings do not utilize any special features of ATS2.
-Resource leaks are still possible. 
+These bindings attempt to track resources and effects.
+Resource and effect modelling are not perfect yet.
 
-Still planned:
-- Function signatures need to reflect the constants they use.
-- cPtr types should be updated to something more appropriate
-- Resource and context tracking with views and viewtypes
+I haven't gotten around to modelling some parts of the library.  If you
+see `cptr` types, it's likely I have not yet verified  semantics of the given ptr.
+
+## C-Like Bindings
+
+C-like bindings are provided in `SATS/raylib_raw.sats`.  These
+are easier to use, but are not much safer than writing FFI directly.
+
+Note: at the moment, it's not possible to share types between the
+normal and raw bindings: use one or the other within a given scope.
+Mixing results in confusing type errors, because the types have
+the same name.
+
+## TODO
+
+- Improve effects modelling
+- Provide a binding that uses viewtypes without effects.
+- Improve the situation for shared types between bindings.  
 
 LICENSE: MIT
