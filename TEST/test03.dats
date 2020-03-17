@@ -124,40 +124,44 @@ implement main0 ()
 
                 val (DRAW | ()) 
                   = BeginDrawing(WIN | );
-                val () = ClearBackground( DRAW | RAYWHITE);
-                val (M3D | ()) 
-                       = BeginMode3D( DRAW | camera)
 
-                val (pf, pff | p)
-                  = array_ptr_takeout( view@models | addr@models, i2sz( currentModel ) )
+                    val () = ClearBackground( DRAW | RAYWHITE);
 
-                val () =    DrawModel( M3D | !p, position, 1.0f, PURPLE)
+                    val (M3D | ()) 
+                      = BeginMode3D( DRAW | camera)
 
-                prval pfa = pff( pf )
-                prval () = view@models := pfa
+                        val (pf, pff | p)
+                          = array_ptr_takeout( view@models | addr@models, i2sz( currentModel ) )
 
-                val () =    DrawGrid( M3D | 10,1.0f)
-                val (DRAW | ()) 
-                       = EndMode3D( M3D | ) 
+                        val () = DrawModel( M3D | !p, position, 1.0f, PURPLE)
 
-                val () = DrawRectangle( DRAW | 30,400,310,30,Fade(SKYBLUE,0.5f))
-                val () = DrawRectangleLines( DRAW | 30,400,310,30,Fade(DARKBLUE,0.5f))
-                val () = DrawText( DRAW | 
-                          "MOUSE LEFT BUTTON to CYCLE PROCEDURAL MODELS"
-                        , 40, 410, 10, BLUE
-                        )
-                val () = model_label( DRAW | currentModel ) where {
-                  fn model_label{l:addr}( DRAW: !Drawing_v(l) | x: int ) : void =
-                    case+ x of
-                    | 0 => DrawText( DRAW | "PLANE", 680, 10, 20, DARKBLUE)
-                    | 1 => DrawText( DRAW | "CUBE", 680, 10, 20, DARKBLUE)
-                    | 2 => DrawText( DRAW | "SPHERE", 680, 10, 20, DARKBLUE)
-                    | 3 => DrawText( DRAW | "HEMISPHERE", 680, 10, 20, DARKBLUE)
-                    | 4 => DrawText( DRAW | "CYLINDER", 680, 10, 20, DARKBLUE)
-                    | 5 => DrawText( DRAW | "TOURUS", 680, 10, 20, DARKBLUE)
-                    | 6 => DrawText( DRAW | "KNOT", 680, 10, 20, DARKBLUE)
-                    | _ => DrawText( DRAW | "POLY", 680, 10, 20, DARKBLUE)
-                }
+                        prval pfa = pff( pf )
+
+                        prval () = view@models := pfa
+
+                        val () = DrawGrid( M3D | 10,1.0f)
+
+                    val (DRAW | ()) 
+                      = EndMode3D( M3D | ) 
+
+                    val () = DrawRectangle( DRAW | 30,400,310,30,Fade(SKYBLUE,0.5f))
+                    val () = DrawRectangleLines( DRAW | 30,400,310,30,Fade(DARKBLUE,0.5f))
+                    val () = DrawText( DRAW | 
+                              "MOUSE LEFT BUTTON to CYCLE PROCEDURAL MODELS"
+                            , 40, 410, 10, BLUE
+                            )
+                    val () = model_label( DRAW | currentModel ) where {
+                      fn model_label{l:addr}( DRAW: !Drawing_v(l) | x: int ) : void =
+                        case+ x of
+                        | 0 => DrawText( DRAW | "PLANE", 680, 10, 20, DARKBLUE)
+                        | 1 => DrawText( DRAW | "CUBE", 680, 10, 20, DARKBLUE)
+                        | 2 => DrawText( DRAW | "SPHERE", 680, 10, 20, DARKBLUE)
+                        | 3 => DrawText( DRAW | "HEMISPHERE", 680, 10, 20, DARKBLUE)
+                        | 4 => DrawText( DRAW | "CYLINDER", 680, 10, 20, DARKBLUE)
+                        | 5 => DrawText( DRAW | "TOURUS", 680, 10, 20, DARKBLUE)
+                        | 6 => DrawText( DRAW | "KNOT", 680, 10, 20, DARKBLUE)
+                        | _ => DrawText( DRAW | "POLY", 680, 10, 20, DARKBLUE)
+                    }
                 val () 
                   = EndDrawing(DRAW | );
               in
