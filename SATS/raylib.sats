@@ -1115,11 +1115,11 @@ fun ExportImageAsCode(!Image, fileName: string) : void = "mac#"
 
 fun LoadTexture(fileName: string) : Texture2D = "mac#"
 
-fun LoadTextureFromImage(!Image) : Texture2D = "mac#"
+fun LoadTextureFromImage{l:addr}( !Window_v(l) | !Image) : Texture2D = "mac#"
 
-fun LoadTextureCubemap(!Image, layoutType: CubemapLayoutType) : TextureCubemap = "mac#"
+fun LoadTextureCubemap{l:addr}( !Window_v(l) | !Image, layoutType: CubemapLayoutType) : TextureCubemap = "mac#"
 
-fun LoadRenderTexture( width: int, height: int) : RenderTexture2D = "mac#"
+fun LoadRenderTexture{l:addr}( !Window_v(l) | width: int, height: int) : RenderTexture2D = "mac#"
 
 fun UnloadImage(Image) : void = "mac#"
 
@@ -1346,13 +1346,13 @@ fun DrawPlane( !Mode3D_v | Vector3, Vector2, Color) : void = "mac#"
 
 fun DrawRay( !Drawing_v | Ray, Color) : void = "mac#"
 
-fun DrawGrid( !Drawing_v | int, float) : void = "mac#"
+fun DrawGrid( !Mode3D_v | int, float) : void = "mac#"
 
 fun DrawGizmo( !Drawing_v | Vector3) : void = "mac#"
 
 fun LoadModel(string) : Model = "mac#"
 
-fun LoadModelFromMesh(!Mesh) : Model = "mac#"
+fun LoadModelFromMesh(Mesh) : Model = "mac#"
 
 fun UnloadModel(Model) : void = "mac#"
 
