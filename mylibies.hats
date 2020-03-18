@@ -8,7 +8,7 @@
 #ifndef _RAYLIB_MYLIBIES_HATS
 #define _RAYLIB_MYLIBIES_HATS
 
-staload "./SATS/raylib.sats"
+staload RAYLIB = "./SATS/raylib.sats"
 staload RAYLIB_RAW = "./SATS/raylib_raw.sats"
 
 #endif

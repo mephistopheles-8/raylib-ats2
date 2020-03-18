@@ -8,6 +8,8 @@
 #include "share/atspre_staload.hats"
 #include "./../mylibies.hats"
 
+staload $RAYLIB
+
 (** It would be frustrating to model this safely **)
 %{
 static void 

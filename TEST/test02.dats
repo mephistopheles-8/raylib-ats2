@@ -8,6 +8,8 @@
 #include "share/atspre_staload.hats"
 #include "./../mylibies.hats"
 
+staload $RAYLIB
+
 implement main0 () 
   = println!("Hello [test02]") where 
     {
