@@ -165,7 +165,7 @@ implement main0 ()
                         | _ => DrawText( DRAW | "POLY", 680, 10, 20, DARKBLUE)
                     }
                 val () 
-                  = EndDrawing(DRAW | );
+                  = EndDrawing(WIN, DRAW | );
               in
                 loop( WIN | camera, currentModel, position, models )
              end

@@ -796,16 +796,28 @@ fun ClearBackground( !Drawing_v | Color) : void = "mac#"
 fun BeginDrawing{l:addr}(!Window_v(l) |) 
   : (Drawing_v(l) | void) = "mac#"
 
-fun EndDrawing{l:addr}(Drawing_v(l) |) 
+fun EndDrawing{l:addr}(!Window_v(l), Drawing_v(l) |) 
   : void = "mac#"
+
+
+(***
+ ** Modes:
+ ** There are several different drawing modes in raylib.
+ ** One cannot leave  drawing mode while another mode
+ ** is in session.  
+ **
+ ** Mode3D behaves slightly differently in that it consumes
+ ** Drawing_v and returns it when 3D mode ends.  This
+ ** disables 2D drawing functions in 3D mode.
+ **)
 
 absview Mode2D_v(l:addr)
 viewdef Mode2D_v = [l:addr] Mode2D_v(l)
-fun BeginMode2D{l:addr}( Drawing_v(l) | Camera2D) 
+fun BeginMode2D{l:addr}( !Drawing_v(l) | Camera2D) 
   : (Mode2D_v(l) | void) = "mac#"
 
-fun EndMode2D{l:addr}(Mode2D_v(l) |) 
-  : (Drawing_v(l) | void) = "mac#"
+fun EndMode2D{l:addr}( !Drawing_v(l), Mode2D_v(l) |) 
+  : void = "mac#"
 
 absview Mode3D_v(l:addr)
 viewdef Mode3D_v = [l:addr] Mode3D_v(l)
@@ -817,21 +829,21 @@ fun EndMode3D{l:addr}(Mode3D_v(l) |)
 
 absview TextureMode_v(l:addr)
 viewdef TextureMode_v = [l:addr] TextureMode_v(l)
-fun BeginTextureMode{l:addr}(Drawing_v(l) | !RenderTexture2D) 
+fun BeginTextureMode{l:addr}( !Drawing_v(l) | !RenderTexture2D) 
   : (TextureMode_v(l) | void) = "mac#"
 
-fun EndTextureMode{l:addr}(TextureMode_v(l) | ) 
-  : (Drawing_v(l) | void) = "mac#"
+fun EndTextureMode{l:addr}( !Drawing_v(l), TextureMode_v(l) | ) 
+  : void = "mac#"
 
 absview ScissorMode_v(l:addr)
 viewdef ScissorMode_v = [l:addr] ScissorMode_v(l)
 fun BeginScissorMode{l:addr}(!Drawing_v(l) | x: int, y: int, width: int, height: int) 
   : (ScissorMode_v(l) | void) = "mac#"
 
-fun EndScissorMode{l:addr}(ScissorMode_v(l) |) 
+fun EndScissorMode{l:addr}(!Drawing_v(l), ScissorMode_v(l) |) 
   : void = "mac#"
 
-fun GetMouseRay(Vector2, Camera) : Ray = "mac#"
+fun GetMouseRay(!Window_v | Vector2, Camera) : Ray = "mac#"
 
 fun GetCameraMatrix(Camera) : Matrix = "mac#"
 
@@ -914,7 +926,7 @@ fun ClearDirectoryFiles{l:addr}{n:nat}(array_v(string,l,n), DirectoryFiles_v(l) 
 
 fun ChangeDirectory(string) : bool = "mac#"
 
-fun IsFileDropped() : bool = "mac#"
+fun IsFileDropped(!Window_v | ) : bool = "mac#"
 
 absview DroppedFiles_v(l:addr)
 fun GetDroppedFiles(&int? >> int n) 
@@ -955,13 +967,13 @@ fun IsGamepadName(GamepadNumber, string) : bool = "mac#"
 
 fun GetGamepadName(GamepadNumber) : string = "mac#"
 
-fun IsGamepadButtonPressed(GamepadNumber, GamepadButton) : bool = "mac#"
+fun IsGamepadButtonPressed(!Window_v | GamepadNumber, GamepadButton) : bool = "mac#"
 
-fun IsGamepadButtonDown(GamepadNumber, GamepadButton) : bool = "mac#"
+fun IsGamepadButtonDown(!Window_v | GamepadNumber, GamepadButton) : bool = "mac#"
 
-fun IsGamepadButtonReleased(GamepadNumber, GamepadButton) : bool = "mac#"
+fun IsGamepadButtonReleased(!Window_v | GamepadNumber, GamepadButton) : bool = "mac#"
 
-fun IsGamepadButtonUp(GamepadNumber, GamepadButton) : bool = "mac#"
+fun IsGamepadButtonUp(!Window_v | GamepadNumber, GamepadButton) : bool = "mac#"
 
 fun GetGamepadButtonPressed(!Window_v | ) : int = "mac#"
 
@@ -1521,13 +1533,13 @@ fun SetVrConfiguration(!VrSim_v | VrDeviceInfo, !Shader) : void = "mac#"
 
 fun IsVrSimulatorReady{l:addr}{b:bool}( !VrSim_v(l,b) | ) : bool b = "mac#"
 
-fun ToggleVrMode{l:addr}{b:bool}(!VrSim_v(l,b) >> VrSim_v(l,~b) |) : void = "mac#"
+fun ToggleVrMode{l:addr}(!VrSim_v(l,true) |) : void = "mac#"
 
-absview VrDrawing_v(l:addr)
-viewdef VrDrawing_v = [l:addr] VrDrawing_v(l)
-fun BeginVrDrawing{l:addr}( VrSim_v(l,true) |) : (VrDrawing_v(l) | void) = "mac#"
+absview VrDrawing_v(vr:addr,draw:addr)
+viewdef VrDrawing_v = [vr,draw:addr] VrDrawing_v(vr,draw)
+fun BeginVrDrawing{vr,draw:addr}( !Drawing_v(draw), VrSim_v(vr,true) |) : (VrDrawing_v(vr,draw) | void) = "mac#"
 
-fun EndVrDrawing{l:addr}( VrDrawing_v(l) |) : (VrSim_v(l,true) | void) = "mac#"
+fun EndVrDrawing{vr,draw:addr}( !Drawing_v(draw), VrDrawing_v(vr,draw) |) : (VrSim_v(vr,true) | void) = "mac#"
 
 absview AudioDevice_v
 fun InitAudioDevice() : (AudioDevice_v | void) = "mac#"

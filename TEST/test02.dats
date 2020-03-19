@@ -52,7 +52,7 @@ implement main0 ()
                   DrawCircleV( DRAW | ballPosition, 50.0f, MAROON );
                 )
                 val () 
-                  = EndDrawing(DRAW | );
+                  = EndDrawing(WIN, DRAW | );
               in
                 loop( WIN | ballPosition )
              end
